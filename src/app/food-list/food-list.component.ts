@@ -4,6 +4,10 @@ import { FoodItem } from '../shared/models/food-item.model';
 import { CartService } from '../shared/services/cart.service';
 import { FoodService } from '../shared/services/food.service';
 import { ToastrService } from 'ngx-toastr';
+import { HttpClient } from '@angular/common/http';
+
+
+
 @Component({
   selector: 'app-food-list',
   templateUrl: './food-list.component.html',
@@ -11,21 +15,33 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class FoodListComponent implements OnInit {
   //create a foodList array of FoodItem type
-  foodList: FoodItem[] = [
-    { id: 1, name: "Pizza", description: "Delicious pizza with all your favorite toppings!", price: 9.99,  imageUrl: './assets/pizza.jpg' },
-    { id: 2, name: "Burger", description: "Juicy burger with all the fixings!", price: 6.99 ,  imageUrl: './assets/burger.jpg'},
-    { id: 3, name: "Fries", description: "Crispy fries with your choice of dipping sauce.", price: 3.99,  imageUrl: './assets/fries.jpg' },
-    { id: 4, name: "Samosa", description: "Crispy and savory triangular pastry filled with spiced vegetables!", price: 2.99,  imageUrl: './assets/samosa.jpg' },
-    { id: 5, name: "Dosa", description: "Savory,Crispy made from fermented rice,with delicious chutneys and sambar.", price: 16.99 ,  imageUrl: './assets/dosa.jpg'},
-    { id: 6, name: "Dhokla", description: "Fluffy and spongy Gujarati snack made from fermented batter!", price: 7.99,  imageUrl: './assets/dhokla.jfif' }
-  ];
+  foodList: FoodItem[] = [];
+
   cartItems: CartItem[] = [];
   foodItems: FoodItem[] = [];
+
   //create here a constructor with all required parameters
-  constructor(private foodService: FoodService, private cartService: CartService,private toastr: ToastrService) { }
+  constructor(private foodService: FoodService, private cartService: CartService,private toastr: ToastrService, private http:HttpClient) { }
+
+
   ngOnInit(): void {
     this.cartItems = JSON.parse(localStorage.getItem('cartItems') || '[]');
+
+    this.getFoodItems().subscribe((data: FoodItem[]) => {
+      this.foodList = data;
+      console.log(this.foodItems);
+    });
+    
   }
+
+
+  
+  getFoodItems() {
+      const url = 'http://ec2-13-235-114-103.ap-south-1.compute.amazonaws.com:8080/api/menu';
+      return this.http.get<FoodItem[]>(url);
+  }
+  
+
   //create a function addToCart here such that it will add the item to the cart
   addToCart(item: FoodItem): void {
     const existingItem = this.cartItems.find(i => i.id === item.id);
@@ -35,6 +51,8 @@ export class FoodListComponent implements OnInit {
       const newItem: any = {
         id: item.id,
         name: item.name,
+        description: item.description,
+        type: item.type,
         price: item.price,
         quantity: 1,
       };

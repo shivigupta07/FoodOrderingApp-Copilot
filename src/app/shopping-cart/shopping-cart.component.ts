@@ -49,11 +49,11 @@ export class ShoppingCartComponent {
       items: this.cartItems,
       totalPrice: this.getTotalPrice()
     };
-    this.http.post('http://localhost:3000/checkout', orderData)
-      .subscribe(
-        response => console.log(response),
-        error => console.log(error)
-      );
+    // this.http.post('http://ec2-13-235-114-103.ap-south-1.compute.amazonaws.com:8080/orders', orderData)
+    //   .subscribe(
+    //     response => console.log(response),
+    //     error => console.log(error)
+    //   );
     this.cartService.clearCart();
     this.cartItems = [];
   }
@@ -65,5 +65,6 @@ export class ShoppingCartComponent {
   checkoutCart() {
     console.log('checkout');
     this.cartService.checkoutCart();
+    this.clearCart();
   }
 }
