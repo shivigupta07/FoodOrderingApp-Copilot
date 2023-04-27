@@ -37,7 +37,7 @@ export class FoodListComponent implements OnInit {
 
   
   getFoodItems() {
-      const url = 'http://ec2-13-235-114-103.ap-south-1.compute.amazonaws.com:8080/api/menu';
+      const url = 'https://ec2-13-235-114-103.ap-south-1.compute.amazonaws.com:8443/api/menu';
       return this.http.get<FoodItem[]>(url);
   }
   
