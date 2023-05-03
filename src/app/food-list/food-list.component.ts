@@ -5,6 +5,7 @@ import { CartService } from '../shared/services/cart.service';
 import { FoodService } from '../shared/services/food.service';
 import { ToastrService } from 'ngx-toastr';
 import { HttpClient } from '@angular/common/http';
+import { EMPTY, catchError, map } from 'rxjs';
 
 
 
@@ -14,33 +15,56 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./food-list.component.scss']
 })
 export class FoodListComponent implements OnInit {
+  
   //create a foodList array of FoodItem type
   foodList: FoodItem[] = [];
 
+  
   cartItems: CartItem[] = [];
-  foodItems: FoodItem[] = [];
 
   //create here a constructor with all required parameters
-  constructor(private foodService: FoodService, private cartService: CartService,private toastr: ToastrService, private http:HttpClient) { }
+  constructor(private foodService: FoodService, private cartService: CartService, private toastr: ToastrService, private http: HttpClient) { }
 
 
   ngOnInit(): void {
+    this.getFoodItems();
     this.cartItems = JSON.parse(localStorage.getItem('cartItems') || '[]');
-
-    this.getFoodItems().subscribe((data: FoodItem[]) => {
-      this.foodList = data;
-      console.log(this.foodItems);
-    });
-    
-  }
-
-
-  
-  getFoodItems() {
-      const url = 'https://ec2-13-235-114-103.ap-south-1.compute.amazonaws.com:8443/api/menu';
-      return this.http.get<FoodItem[]>(url);
   }
   
+  
+  getFoodItems(): void {
+    this.foodService.getFoodItems()
+      .pipe(
+        map((foodItems: any[]) => {
+          return foodItems.map(item => {
+            item.rating = Math.floor(Math.random() * 5) + 1;
+            if (item.name.includes('Grilled Salmon')) {
+              item.imageUrl = './assets/grilled_salmon.jpg';
+            } else if (item.name.includes('Caprese Salad')) {
+              item.imageUrl = './assets/burger.jpg';
+            }
+            else {
+              item.imageUrl = './assets/food.png';
+              item.rating = Math.floor(Math.random() * 5) + 1;
+            }
+            return item;
+          });
+        }),
+        catchError((error: any) => {
+          console.error(error);
+          return EMPTY;
+        })
+      )
+      .subscribe(
+        (foodItems: FoodItem[]) => {
+          this.foodList = foodItems;
+        },
+        (error: any) => {
+          console.error(error);
+        }
+      );
+  }
+
 
   //create a function addToCart here such that it will add the item to the cart
   addToCart(item: FoodItem): void {
@@ -61,5 +85,28 @@ export class FoodListComponent implements OnInit {
     localStorage.setItem('cartItems', JSON.stringify(this.cartItems));
     this.toastr.success('You can add more items.', `HURRAH...! ${item.name} Added`);
   }
+
+
+  sortByName() {
+    this.foodList.sort((a, b) => {
+      if (a.name < b.name) return -1;
+      if (a.name > b.name) return 1;
+      return 0;
+    });
+  }
+  
+  sortByPrice() {
+    this.foodList.sort((a, b) => {
+      return a.price - b.price;
+    });
+  }
+
+  sortByRating() {
+    this.foodList.sort((a, b) => {
+      return b.rating - a.rating;
+    });
+  }
+
+
 }
 

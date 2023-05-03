@@ -6,4 +6,5 @@ export interface FoodItem {
     type: string;
     price: number;
     imageUrl: string;
+    rating: number;
   }

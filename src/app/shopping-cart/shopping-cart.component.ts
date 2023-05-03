@@ -12,59 +12,59 @@ import { HttpClient } from '@angular/common/http';
 export class ShoppingCartComponent {
 //provide code of shopping-cart.component.ts here like code of increment and decrement function, remove item function, total price function, etc.
   constructor(private cartService: CartService, private http: HttpClient) { }
-  selectedFoodItems = [];
+
   cartItems:any = [];
   //cartItems: CartItem[] = [];
   totalPrice: number = 0;
+
+
   //ngOnoit code here
   ngOnInit(): void {
   this.updateCart();
   //this.cartItems = this.cartService.getItems();
   }
+
+
   //updateCart code here
   updateCart(): void {
     this.cartItems = JSON.parse(localStorage.getItem('cartItems') || '[]');
     this.totalPrice = this.cartItems.reduce((total:number, item:any) => total + (item.price * item.quantity), 0);
   }
+
+
+
   //removeItem function here
   removeItem(index: number): void {
     this.cartItems.splice(index, 1);
     localStorage.setItem('cartItems', JSON.stringify(this.cartItems));
     this.updateCart();
   }
+
+
   //removeFromCart function here
   removeFromCart(item: CartItem) {
     this.cartService.removeFromCart(item);
     this.cartItems = this.cartService.getItems();
   }
+
+
   //clearCart function here
   clearCart(): void {
     localStorage.removeItem('cartItems');
     this.cartItems = [];
     this.totalPrice = 0;
   }
-  //checkout function here
-  checkout() {
-    const orderData = {
-      items: this.cartItems,
-      totalPrice: this.getTotalPrice()
-    };
-    // this.http.post('http://ec2-13-235-114-103.ap-south-1.compute.amazonaws.com:8080/orders', orderData)
-    //   .subscribe(
-    //     response => console.log(response),
-    //     error => console.log(error)
-    //   );
-    this.cartService.clearCart();
-    this.cartItems = [];
-  }
+
+
+
   //getTotalPrice function here
   getTotalPrice() {
     return this.cartItems.reduce((total:number, item:any) => total + item.price * item.quantity, 0);
   }
+
+
   //checkoutCart function here
   checkoutCart() {
-    console.log('checkout');
     this.cartService.checkoutCart();
-    this.clearCart();
   }
 }

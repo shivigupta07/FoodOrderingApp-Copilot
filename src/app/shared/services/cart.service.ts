@@ -1,11 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
 import { CartItem } from '../models/cart-item.model';
-import { FoodItem } from '../models/food-item.model';
 import { FoodService } from './food.service';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { OrderService } from './oder.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,13 +13,11 @@ export class CartService {
 
   items: CartItem[] = [];
   cartItems: CartItem[] = [];
-  private apiUrl = 'https://ec2-13-235-114-103.ap-south-1.compute.amazonaws.com:8443/orders';
+  private apiUrl = 'http://ec2-13-235-114-103.ap-south-1.compute.amazonaws.com:8443/orders';
 
-  constructor(private foodService: FoodService, private http: HttpClient, private router: Router,private toastr: ToastrService) { }
+  constructor(private foodService: FoodService, private http: HttpClient, private router: Router,private toastr: ToastrService, private orderService: OrderService) { }
 
-  addToCart(foodItem: CartItem) {
-   
-  }
+
 
   getItems() {
     return this.items;
@@ -28,11 +25,15 @@ export class CartService {
 
   clearCart() {
     this.items = [];
+    localStorage.removeItem('cartItems');
   }
+
 
   removeFromCart(item: CartItem) {
     
   }
+
+
 
   // Checkout cart
   public checkoutCart(): any {

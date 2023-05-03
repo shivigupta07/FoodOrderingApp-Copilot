@@ -9,13 +9,17 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
+import { OrderHistoryComponent } from './order-history/order-history.component';
+import { NotFoundComponent } from './not-found/not-found.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     FoodListComponent,
     ShoppingCartComponent,
-    NavbarComponent
+    NavbarComponent,
+    OrderHistoryComponent,
+    NotFoundComponent
   ],
   imports: [
     BrowserModule,
@@ -30,7 +34,9 @@ import { ToastrModule } from 'ngx-toastr';
       preventDuplicates: true
     })
   ],
-  providers: [],
+  providers: [
+    FoodListComponent
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
