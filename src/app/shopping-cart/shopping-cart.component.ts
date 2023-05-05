@@ -66,5 +66,6 @@ export class ShoppingCartComponent {
   //checkoutCart function here
   checkoutCart() {
     this.cartService.checkoutCart();
+    this.clearCart();
   }
 }

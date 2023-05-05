@@ -21,6 +21,7 @@ export class FoodListComponent implements OnInit {
 
   
   cartItems: CartItem[] = [];
+  name: string = "";
 
   //create here a constructor with all required parameters
   constructor(private foodService: FoodService, private cartService: CartService, private toastr: ToastrService, private http: HttpClient) { }
@@ -108,5 +109,18 @@ export class FoodListComponent implements OnInit {
   }
 
 
+  search(){
+    if(this.name != ""){
+      this.foodList = this.foodList.filter(res=>{
+        return res.name.toLocaleLowerCase().match(this.name.toLocaleLowerCase());
+      });
+    }
+  }
+
+  clear(){
+    this.name = "";
+    this.getFoodItems();
+  }
+  
 }
 

@@ -11,6 +11,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 import { OrderHistoryComponent } from './order-history/order-history.component';
 import { NotFoundComponent } from './not-found/not-found.component';
+import { ReportComponent } from './report/report.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { NotFoundComponent } from './not-found/not-found.component';
     ShoppingCartComponent,
     NavbarComponent,
     OrderHistoryComponent,
-    NotFoundComponent
+    NotFoundComponent,
+    ReportComponent
   ],
   imports: [
     BrowserModule,
