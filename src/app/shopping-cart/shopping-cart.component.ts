@@ -4,6 +4,8 @@ import { FoodItem } from '../shared/models/food-item.model';
 import { CartItem } from '../shared/models/cart-item.model';
 import { CartService } from '../shared/services/cart.service';
 import { HttpClient } from '@angular/common/http';
+import { ToastrService } from 'ngx-toastr';
+
 @Component({
   selector: 'app-shopping-cart',
   templateUrl: './shopping-cart.component.html',
@@ -11,7 +13,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class ShoppingCartComponent {
 //provide code of shopping-cart.component.ts here like code of increment and decrement function, remove item function, total price function, etc.
-  constructor(private cartService: CartService, private http: HttpClient) { }
+  constructor(private cartService: CartService, private http: HttpClient,private toastr: ToastrService) { }
 
   cartItems:any = [];
   //cartItems: CartItem[] = [];
@@ -65,7 +67,12 @@ export class ShoppingCartComponent {
 
   //checkoutCart function here
   checkoutCart() {
-    this.cartService.checkoutCart();
-    this.clearCart();
+    if(this.cartItems.length){
+      this.cartService.checkoutCart();
+      this.clearCart();
+    }
+    else{
+      this.toastr.info("Please add items to the cart.");
+    }
   }
 }
